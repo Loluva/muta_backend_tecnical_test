@@ -1,8 +1,11 @@
 const {Router}=require("express")
-const {userRoute}=require("./user.routes")
-
+const {usersRoute}=require("./users.routes")
+const {materialsRoute}=require("./materials.routes")
+const {collectionsRoute}=require("./collections.routes")
 const router=Router()
 
-router.use("/users",userRoute)
+router.use("/",usersRoute)
+router.use("/materials",materialsRoute)
+router.use("/collections",collectionsRoute)
 
 module.exports={router}

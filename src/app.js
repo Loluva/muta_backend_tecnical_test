@@ -10,6 +10,9 @@ const PORT=process.env.PORT||3000
 //middlewares
 app.use(json())
 
+app.get("/",(req,res)=>{
+    res.json({message:"hello world"})
+})
 //routes
 app.use("/",router)
 //server connect
