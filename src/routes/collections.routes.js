@@ -1,8 +1,9 @@
 const {Router}=require("express")
 const {pool}=require("../config/db")
 const collectionsRoute=Router()
+const {authenticateJWT}=require("../middlewares/authMiddleware")
 
-collectionsRoute.get("/",async (req,res)=>{
+collectionsRoute.get("/",authenticateJWT,async (req,res)=>{
     try {
         const db_response=await pool.query(`SELECT c.id,c.quantity,c.collection_date,m.name as material FROM collections as c JOIN materials as m ON c.material_id=m.id order by c.id`)
         if (db_response.rows.length<1){
@@ -18,7 +19,7 @@ collectionsRoute.get("/",async (req,res)=>{
         }
     }
 })
-collectionsRoute.get("/:id", async(req,res)=>{
+collectionsRoute.get("/:id", authenticateJWT,async(req,res)=>{
     try {
         const id=req.params.id
         const db_response=await pool.query(`SELECT c.id,c.quantity,c.collection_date,m.name as material FROM collections as c JOIN materials as m ON c.material_id=m.id WHERE c.id=${id}`)
@@ -36,7 +37,7 @@ collectionsRoute.get("/:id", async(req,res)=>{
     }
 
 })
-collectionsRoute.post("/",async (req,res)=>{
+collectionsRoute.post("/",authenticateJWT,async (req,res)=>{
     try {
         const {materialId, quantity,collectionDate}=req.body
         if(!typeof(materialId)=="number") return res.status(400).json({error:"material id is invalid"})
@@ -57,7 +58,7 @@ collectionsRoute.post("/",async (req,res)=>{
     }
 
 })
-collectionsRoute.put("/:id",async (req,res)=>{
+collectionsRoute.put("/:id",authenticateJWT,async (req,res)=>{
     try {
         const id=req.params.id
         const {materialId, quantity,collectionDate}=req.body
@@ -83,7 +84,7 @@ collectionsRoute.put("/:id",async (req,res)=>{
     }
 
 })
-collectionsRoute.delete("/:id",async (req,res)=>{
+collectionsRoute.delete("/:id",authenticateJWT,async (req,res)=>{
     try {
         const id=req.params.id
         const db_response=await pool.query(`DELETE FROM collections WHERE id=${id} RETURNING *`)

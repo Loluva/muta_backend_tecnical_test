@@ -2,6 +2,11 @@ const {Router}=require("express")
 const {pool}=require("../config/db")
 const usersRoute=Router()
 
+const jwt = require('jsonwebtoken');
+require("dotenv").config()
+
+const auth_secret=process.env.AUTH_SECRET
+
 usersRoute.post("/login",async (req,res)=>{
     const {username,password}=req.body
     try{
@@ -9,8 +14,8 @@ usersRoute.post("/login",async (req,res)=>{
         if(db_response.rows.length<1){
             return res.status(400).json({error:"Wrong username or password"})
         }
-        console.log(db_response.rows[0])
-        return res.json(db_response.rows[0])
+        const token = jwt.sign({ username }, auth_secret, { expiresIn: '1h' });
+        return res.json(token)
     }catch(err){
         console.log(err)
         return res.status(500).json({error:"Internal server Error"})

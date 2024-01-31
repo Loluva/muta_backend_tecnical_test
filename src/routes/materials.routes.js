@@ -1,8 +1,10 @@
 const {Router} =require("express")
 const {pool}=require("../config/db")
 const materialsRoute=Router()
+const {authenticateJWT}=require("../middlewares/authMiddleware")
 
-materialsRoute.get("/",async (req,res)=>{
+
+materialsRoute.get("/",authenticateJWT,async (req,res)=>{
     try {
         const db_response=await pool.query(`SELECT * FROM materials order by id`)
         if (db_response.rows.length<1){
@@ -18,7 +20,7 @@ materialsRoute.get("/",async (req,res)=>{
         }
     }
 })
-materialsRoute.get("/:id", async(req,res)=>{
+materialsRoute.get("/:id", authenticateJWT,async(req,res)=>{
     try {
         const id=req.params.id
         const db_response=await pool.query(`SELECT * FROM materials WHERE id='${id}'`)
@@ -36,7 +38,7 @@ materialsRoute.get("/:id", async(req,res)=>{
     }
 
 })
-materialsRoute.post("/",async (req,res)=>{
+materialsRoute.post("/",authenticateJWT,async (req,res)=>{
     try {
         const {name, weight,value}=req.body
         if(!typeof(name)=="string") return res.status(400).json({error:"material name is invalid"})
@@ -52,7 +54,7 @@ materialsRoute.post("/",async (req,res)=>{
     }
 
 })
-materialsRoute.put("/:id",async (req,res)=>{
+materialsRoute.put("/:id",authenticateJWT,async (req,res)=>{
     try {
         const id=req.params.id
         const {name, weight,value}=req.body
@@ -73,7 +75,7 @@ materialsRoute.put("/:id",async (req,res)=>{
     }
 
 })
-materialsRoute.delete("/:id",async (req,res)=>{
+materialsRoute.delete("/:id",authenticateJWT,async (req,res)=>{
     try {
         const id=req.params.id
         const db_response=await pool.query(`DELETE FROM materials WHERE id=${id} RETURNING *`)
