@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS materials (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  weight DECIMAL NOT NULL,
+  value DECIMAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS collections (
+  id SERIAL PRIMARY KEY,
+  material_id INT REFERENCES materials(id) NOT NULL,
+  quantity INT NOT NULL,
+  collection_date TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (material_id) REFERENCES materials(id)
+);
