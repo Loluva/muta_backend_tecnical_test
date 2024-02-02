@@ -45,7 +45,7 @@ const postOptimalPath =(req,res)=>{
         currentWeight -= recyclableMaterialList[i - 1].weight;
         }
     }
-    return res.json(selectedMaterials.reverse()) 
+    return res.json({"optimalPath":selectedMaterials.reverse(),"totalValue":selectedMaterials.reduce((total,material)=>total+Number(material.value),0)}) 
 }
 
 module.exports={postOptimalPath}

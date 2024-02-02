@@ -25,14 +25,14 @@ const userLogin=async (req,res)=>{
     let db_response=await pool.query(`SELECT * FROM users WHERE username='${username}'`)
     if(db_response.rows.length<1){
         let error=new Error("Wrong username or password")
-        error.status=400
+        error.status=401
         throw error
     }
     const storedPassword = db_response.rows[0].password;
     const passwordMatch = await bcrypt.compare(password, storedPassword);
     if(!passwordMatch){
         let error=new Error("Wrong username or password")
-        error.status=400
+        error.status=401
         throw error
     }
     const token = jwt.sign({ username }, auth_secret, { expiresIn: '1h' });
@@ -46,7 +46,7 @@ const userRegister=async (req,res)=>{
     let db_response=await pool.query(`SELECT username, password FROM users WHERE username='${username}'`)
     if(!db_response.rows.length<1){
         let error=new Error("This user already exist")
-        error.status=400
+        error.status=409
         throw error
     }
     const hashedPassword = await bcrypt.hash(password, saltRound);
