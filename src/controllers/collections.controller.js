@@ -2,6 +2,7 @@ const {pool}=require("../config/db")
 const { validateidParameter } = require("../utils/validateId")
 const { validateTimestamp } = require("../utils/validateTimestamp")
 
+// Validate collections parameters
 const validateCollectionParameters=({materialId, quantity,collectionDate})=>{
     if(materialId==undefined || typeof(materialId)!=="number" ||!Number.isInteger(Number(materialId))){
         let error= new Error("Invalid parameter: materialId")
@@ -19,7 +20,7 @@ const validateCollectionParameters=({materialId, quantity,collectionDate})=>{
         throw error
     }
 }
-
+// Get all collections
 const getCollections= async(req,res)=>{
         const db_response=await pool.query(`SELECT c.id,c.quantity,c.collection_date,m.name as material FROM collections as c JOIN materials as m ON c.material_id=m.id order by c.id`)
         if (db_response.rows.length<1){
@@ -29,7 +30,7 @@ const getCollections= async(req,res)=>{
         }
         return res.json(db_response.rows)         
 }
-
+// Get a collection by ID
 const getCollectionsById=async(req,res)=>{
         validateidParameter(req.params.id)    
         const id=req.params.id
@@ -42,7 +43,7 @@ const getCollectionsById=async(req,res)=>{
         }
         return res.json(db_response.rows[0])
 }
-
+// Create a new collection
 const postCollections=async(req,res)=>{
         validateCollectionParameters(req.body)
         const {materialId, quantity,collectionDate}=req.body
@@ -56,7 +57,7 @@ const postCollections=async(req,res)=>{
         db_response= await pool.query(`INSERT INTO collections (material_id,quantity,collection_date) VALUES ('${materialId}','${quantity}','${collectionDate}') RETURNING *`)
         return  res.status(201).json(db_response.rows[0])
 }
-
+// Update a collection by ID
 const updateCollectionsById=async(req,res)=>{
         validateidParameter(req.params.id)
         validateCollectionParameters(req.body)
@@ -80,7 +81,7 @@ const updateCollectionsById=async(req,res)=>{
 
         return res.json(db_response.rows[0])
 }
-
+// Delete a collection by ID
 const deleteCollectionsById=async(req,res)=>{
         validateidParameter(req.params.id)
         const id=req.params.id

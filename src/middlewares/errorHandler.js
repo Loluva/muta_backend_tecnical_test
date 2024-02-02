@@ -1,3 +1,4 @@
+// Custom error handling middleware
 const errorHandler=(error,req,res,next)=>{
 
   let status = error.status || 500;

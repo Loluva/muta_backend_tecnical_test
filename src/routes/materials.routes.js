@@ -3,7 +3,7 @@ const {authenticateJWT}=require("../middlewares/authMiddleware")
 const {getMaterials,getMaterialsById,postMaterials,updateMaterialsById,deleteMaterialsById}=require("../controllers/materials.controller")
 const { tryCatch } = require("../utils/trycatch")
 const materialsRoute=Router()
-
+// Define routes for materials
 materialsRoute.get("/",authenticateJWT,tryCatch(getMaterials))
 materialsRoute.get("/:id", authenticateJWT,tryCatch(getMaterialsById))
 materialsRoute.post("/",authenticateJWT,tryCatch(postMaterials))

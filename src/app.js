@@ -4,24 +4,26 @@ const {router}=require("./routes")
 const {errorHandler}=require("./middlewares/errorHandler")
 require("dotenv").config()
 
-//configs
+// Create an instance of Express
 const app=express()
+// Define the port for the server to listen on
 const PORT=process.env.PORT||3030
 
-// express middlewares
+//Express middlewares
 app.use(json())
 
+//Welcome route
 app.get("/",(req,res)=>{
     res.json({message:"API RESTful para la gestión de materiales reciclables y recolecciones."})
 })
 
-//routes
+//Routing
 app.use("/",router)
 
-// error handler middleware
+//Error handler middleware
 app.use(errorHandler)
 
-//server connect
+//Start the server and listen on the specified port
 app.listen(PORT,(err)=>{
     if(err){
         console.log(err)

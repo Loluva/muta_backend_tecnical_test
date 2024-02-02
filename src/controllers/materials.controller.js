@@ -1,6 +1,7 @@
 const {pool}=require("../config/db")
 const { validateidParameter } = require("../utils/validateId")
 
+// Validate material parameters
 const validateMaterialParameters=({name, weight,value})=>{
 
     if(weight==undefined || typeof(weight)!=="number" ){
@@ -19,7 +20,7 @@ const validateMaterialParameters=({name, weight,value})=>{
         throw error
     }
 }
-
+// Get all materials
 const getMaterials=async (req,res)=>{
  
         const db_response=await pool.query(`SELECT * FROM materials order by id`)
@@ -31,7 +32,7 @@ const getMaterials=async (req,res)=>{
         return res.json(db_response.rows)
         
 }
-
+// Get a material by ID
 const getMaterialsById=async (req,res)=>{
     validateidParameter(req.params.id)
     const id=req.params.id
@@ -44,7 +45,7 @@ const getMaterialsById=async (req,res)=>{
         return res.json(db_response.rows[0])
 
 }
-
+// Create a new material
 const postMaterials=async (req,res)=>{
         validateMaterialParameters(req.body)
         const {name, weight,value}=req.body
@@ -54,7 +55,7 @@ const postMaterials=async (req,res)=>{
 
 }
 
-
+// Update a material by ID
 const updateMaterialsById=async (req,res)=>{
         validateidParameter(req.params.id)
         validateMaterialParameters(req.body)
@@ -69,7 +70,7 @@ const updateMaterialsById=async (req,res)=>{
         }
         return res.json(db_response.rows[0])
 }
-
+// Delete a material by ID
 const deleteMaterialsById=async (req,res)=>{
         validateidParameter(req.params.id)
         const id=req.params.id
